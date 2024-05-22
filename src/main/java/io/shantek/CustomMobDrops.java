@@ -23,7 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import io.shantek.Helpers.*;
 import io.shantek.Listeners.*;
 
-public class CustomMobDrops extends JavaPlugin implements Listener {
+public class CustomMobDrops extends JavaPlugin {
     public int minShells = 0;
     public int maxShells = 3;
     public boolean pluginEnabled = true;

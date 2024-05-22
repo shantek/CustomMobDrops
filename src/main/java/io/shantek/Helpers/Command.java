@@ -3,15 +3,17 @@ package io.shantek.Helpers;
 import io.shantek.CustomMobDrops;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class Command {
+public class Command implements CommandExecutor {
 
     public CustomMobDrops customMobDrops;
     public Command(CustomMobDrops customMobDrops) {
         this.customMobDrops = customMobDrops;
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
         if (!cmd.getName().equalsIgnoreCase("shells")) {
             return false;
