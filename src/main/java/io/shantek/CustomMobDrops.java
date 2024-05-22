@@ -20,6 +20,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import io.shantek.Helpers.*;
+import io.shantek.Listeners.*;
 
 public class CustomMobDrops extends JavaPlugin implements Listener {
     private int minShells = 0;
@@ -27,10 +29,16 @@ public class CustomMobDrops extends JavaPlugin implements Listener {
     private boolean pluginEnabled = true;
     private boolean debugMode = false;
 
+    public static CustomMobDrops instance;
+
     public CustomMobDrops() {
     }
 
     public void onEnable() {
+
+        // Save the instance of the plugin
+        instance = this;
+
         this.getServer().getPluginManager().registerEvents(this, this);
         Command shells = this.getCommand("shells");
         File configFile = new File(this.getDataFolder(), "config.yml");
