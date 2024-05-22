@@ -1,10 +1,16 @@
 package io.shantek.Helpers;
 
+import io.shantek.CustomMobDrops;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class Command {
+
+    public CustomMobDrops customMobDrops;
+    public Command(CustomMobDrops customMobDrops) {
+        this.customMobDrops = customMobDrops;
+    }
 
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
         if (!cmd.getName().equalsIgnoreCase("shells")) {
@@ -22,11 +28,11 @@ public class Command {
                 } else {
                     try {
                         newMaxShells = Integer.parseInt(args[1]);
-                        this.getConfig().set("minimum_shells", newMaxShells);
-                        this.saveConfig();
+                        customMobDrops.getConfig().set("minimum_shells", newMaxShells);
+                        customMobDrops.saveConfig();
                         sender.sendMessage(ChatColor.GREEN + "Minimum shulker shell drops set to " + newMaxShells);
-                        this.minShells = newMaxShells;
-                        if (this.minShells > this.maxShells) {
+                        customMobDrops.minShells = newMaxShells;
+                        if (customMobDrops.minShells > customMobDrops.maxShells) {
                             sender.sendMessage(ChatColor.RED + "Minimum shells is currently set higher than maximum shells.");
                         }
 
@@ -43,11 +49,11 @@ public class Command {
                 } else {
                     try {
                         newMaxShells = Integer.parseInt(args[1]);
-                        this.getConfig().set("maximum_shells", newMaxShells);
-                        this.saveConfig();
+                        customMobDrops.getConfig().set("maximum_shells", newMaxShells);
+                        customMobDrops.saveConfig();
                         sender.sendMessage(ChatColor.GREEN + "Maximum shulker shell drops set to " + newMaxShells);
-                        this.maxShells = newMaxShells;
-                        if (this.maxShells < this.minShells) {
+                        customMobDrops.maxShells = newMaxShells;
+                        if (customMobDrops.maxShells < customMobDrops.minShells) {
                             sender.sendMessage(ChatColor.RED + "Maximum shells is currently set lower than minimum shells.");
                         }
 
@@ -65,9 +71,9 @@ public class Command {
                         return true;
                     } else {
                         isDebugEnabled = Boolean.parseBoolean(args[1]);
-                        this.getConfig().set("custom_drops_enabled", isDebugEnabled);
-                        this.saveConfig();
-                        this.pluginEnabled = isDebugEnabled;
+                        customMobDrops.getConfig().set("custom_drops_enabled", isDebugEnabled);
+                        customMobDrops.saveConfig();
+                        customMobDrops.pluginEnabled = isDebugEnabled;
                         Bukkit.getServer().broadcastMessage("Bonus shulker shells are now " + (isDebugEnabled ? "enabled" : "disabled") + "!");
                         return true;
                     }
@@ -77,15 +83,15 @@ public class Command {
                         return true;
                     } else {
                         isDebugEnabled = Boolean.parseBoolean(args[1]);
-                        this.getConfig().set("debug_mode", isDebugEnabled);
-                        this.saveConfig();
+                        customMobDrops.getConfig().set("debug_mode", isDebugEnabled);
+                        customMobDrops.saveConfig();
                         if (isDebugEnabled) {
                             sender.sendMessage(ChatColor.GREEN + "Shulker shell debug mode has been enabled.");
                         } else {
                             sender.sendMessage(ChatColor.GREEN + "Shulker shell debug mode has been disabled.");
                         }
 
-                        this.debugMode = isDebugEnabled;
+                        customMobDrops.debugMode = isDebugEnabled;
                         return true;
                     }
                 } else {

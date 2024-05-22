@@ -72,7 +72,7 @@ public class CustomMobDrops extends JavaPlugin implements Listener {
             try {
                 configFile.createNewFile();
             } catch (IOException var5) {
-                IOException var5 = var5;
+                //IOException var5 = var5;
                 this.getLogger().log(Level.SEVERE, "Could not create config file", var5);
             }
         }
@@ -86,7 +86,7 @@ public class CustomMobDrops extends JavaPlugin implements Listener {
         try {
             config.save(configFile);
         } catch (IOException var4) {
-            IOException var4 = var4;
+            //IOException var4 = var4;
             this.getLogger().log(Level.SEVERE, "Could not save config file", var4);
         }
 
