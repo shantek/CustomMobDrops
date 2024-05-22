@@ -24,10 +24,10 @@ import io.shantek.Helpers.*;
 import io.shantek.Listeners.*;
 
 public class CustomMobDrops extends JavaPlugin implements Listener {
-    private int minShells = 0;
-    private int maxShells = 3;
-    private boolean pluginEnabled = true;
-    private boolean debugMode = false;
+    public int minShells = 0;
+    public int maxShells = 3;
+    public boolean pluginEnabled = true;
+    public boolean debugMode = false;
 
     public static CustomMobDrops instance;
 
@@ -39,7 +39,9 @@ public class CustomMobDrops extends JavaPlugin implements Listener {
         // Save the instance of the plugin
         instance = this;
 
-        this.getServer().getPluginManager().registerEvents(this, this);
+        // Register the plugin listeners
+        registerPluginListeners();
+
         Command shells = this.getCommand("shells");
         File configFile = new File(this.getDataFolder(), "config.yml");
         if (configFile.exists()) {
@@ -87,6 +89,12 @@ public class CustomMobDrops extends JavaPlugin implements Listener {
             IOException var4 = var4;
             this.getLogger().log(Level.SEVERE, "Could not save config file", var4);
         }
+
+    }
+
+    private void registerPluginListeners() {
+
+        Bukkit.getPluginManager().registerEvents(new EntityDeath(this), this);
 
     }
 
