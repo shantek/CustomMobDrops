@@ -1,0 +1,19 @@
+mobs:
+  creeper:
+    drop-all: true
+    drops:
+      - item: GUNPOWDER
+        min: 0
+        max: 5
+      - item: CARROT
+        min: 0
+        max: 2
+  sheep:
+    drop-all: false
+    drops:
+      - item: WHITE_WOOL
+        min: 50
+        max: 200
+      - item: CARROT
+        min: 0
+        max: 20

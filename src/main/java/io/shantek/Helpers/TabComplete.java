@@ -12,12 +12,9 @@ public class TabComplete implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (args.length == 0 && alias.startsWith("shells")) {
+        if (args.length == 0 && alias.startsWith("customdrops")) {
             List<String> completions = new ArrayList();
-            completions.add("min");
-            completions.add("max");
-            completions.add("enabled");
-            completions.add("debug");
+            completions.add("reload");
             return completions;
         } else {
             return Collections.emptyList();

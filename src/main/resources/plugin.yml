@@ -2,23 +2,14 @@ name: CustomMobDrops
 api-version: 1.15
 version: 0.1.0
 author: shantek.io
-main: io.shantek.custommobdrops
+main: io.shantek.CustomDrops
 
 commands:
-  shells:
-    description: Main command for managing shulker shell drops.
-    usage: /shells <min|max|debug|enabled> [value]
-    aliases: [shulker]
+  customdrops:
+    description: Main command for managing custom mob drops.
+    usage: /customdrops ]
+    aliases: [drops]
     subcommands:
-      min:
-        description: Sets the minimum number of shulker shells dropped by shulkers.
-        usage: /shells min <number>
-      max:
-        description: Sets the maximum number of shulker shells dropped by shulkers.
-        usage: /shells max <number>
-      debug:
-        description: Enable/disable debug mode.
-        usage: /shells debug <boolean>
-      enabled:
-        description: Enable/disable the custom drops.
-        usage: /shells enabled <boolean>
+      reload:
+        description: Used to reload the plugin
+        usage: /customdrops reload
