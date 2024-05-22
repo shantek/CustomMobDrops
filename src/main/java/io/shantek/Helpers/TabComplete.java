@@ -3,6 +3,7 @@ package io.shantek.Helpers;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,9 +16,9 @@ public class TabComplete implements TabCompleter {
         if (args.length == 0 && alias.startsWith("customdrops")) {
             List<String> completions = new ArrayList();
             completions.add("reload");
-            return completions;
+            return StringUtil.copyPartialMatches(args[0], completions, new ArrayList<>());
         } else {
-            return Collections.emptyList();
+            return null;
         }
     }
 

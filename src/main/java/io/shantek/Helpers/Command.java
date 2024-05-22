@@ -17,12 +17,8 @@ public class Command implements CommandExecutor {
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
         if (!cmd.getName().equalsIgnoreCase("customdrops")) {
             return false;
-        } else if (args.length < 1) {
-            sender.sendMessage(ChatColor.RED + "Usage: /customdrops [value]");
-            return true;
-        } else {
-            String subCommand = args[0].toLowerCase();
-            if (subCommand.equals("reload")) {
+        } else if (args.length > 0) {
+            if (args[0].equalsIgnoreCase("reload")) {
                 customDrops.customDropConfig.loadConfig();
 
                 if (sender instanceof Player player) {

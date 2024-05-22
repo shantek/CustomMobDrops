@@ -1,11 +1,13 @@
 package io.shantek.Helpers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +17,7 @@ import java.util.Map;
 public class CustomDropConfig {
 
     private final JavaPlugin plugin;
-    private final Map<String, MobDropConfig> entityDrops = new HashMap<>();
+    private final Map<EntityType, MobDropConfig> entityDrops = new HashMap<>();
 
     public CustomDropConfig(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -32,33 +34,46 @@ public class CustomDropConfig {
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         ConfigurationSection mobsSection = config.getConfigurationSection("mobs");
 
-        if (mobsSection != null) {
-            for (String entity : mobsSection.getKeys(false)) {
-                try {
-                    EntityType entityType = EntityType.valueOf(entity.toUpperCase());
-                    boolean dropAll = mobsSection.getBoolean(entity + ".drop-all", false);
-                    List<DropItemConfig> drops = new ArrayList<>();
+        if (mobsSection == null) {
+            plugin.getLogger().severe("No 'mobs' section found in custom-drops.yml");
+            return;
+        }
 
-                    ConfigurationSection dropsSection = mobsSection.getConfigurationSection(entity + ".drops");
-                    if (dropsSection != null) {
-                        for (String dropKey : dropsSection.getKeys(false)) {
-                            String item = dropsSection.getString(dropKey + ".item");
-                            int min = dropsSection.getInt(dropKey + ".min");
-                            int max = dropsSection.getInt(dropKey + ".max");
-                            drops.add(new DropItemConfig(item, min, max));
-                        }
-                    }
-
-                    entityDrops.put(entityType.name(), new MobDropConfig(dropAll, drops));
-                } catch (IllegalArgumentException e) {
-                    Bukkit.getLogger().severe("Invalid entity type in custom-drops.yml: " + entity);
+        for (String entity : mobsSection.getKeys(false)) {
+            try {
+                EntityType entityType = EntityType.valueOf(entity.toUpperCase());
+                boolean dropAll = mobsSection.getBoolean(entity + ".drop-all", false);
+                ConfigurationSection dropsSection = mobsSection.getConfigurationSection(entity + ".drops");
+                if (dropsSection == null) {
+                    plugin.getLogger().severe("No 'drops' section found for entity: " + entity);
+                } else {
+                    List<DropItemConfig> drops = loadDrops(dropsSection);
+                    entityDrops.put(entityType, new MobDropConfig(dropAll, drops));
+                    plugin.getLogger().info("Configured drops for " + entityType.name() + ": " + drops.size() + " items.");
                 }
+            } catch (IllegalArgumentException e) {
+                plugin.getLogger().severe("Invalid entity type in custom-drops.yml: " + entity);
             }
         }
     }
 
-    public MobDropConfig getDrops(String entityType) {
-        return entityDrops.get(entityType.toUpperCase());
+    private List<DropItemConfig> loadDrops(ConfigurationSection dropsSection) {
+        List<DropItemConfig> drops = new ArrayList<>();
+        for (String item : dropsSection.getKeys(false)) {
+            int min = dropsSection.getInt(item + ".min");
+            int max = dropsSection.getInt(item + ".max");
+            if (min <= max) {
+                drops.add(new DropItemConfig(item, min, max));
+                plugin.getLogger().info("Added drop: " + item + " (min: " + min + ", max: " + max + ")");
+            } else {
+                plugin.getLogger().severe("Invalid drop configuration for item: " + item + " (min: " + min + ", max: " + max + ")");
+            }
+        }
+        return drops;
+    }
+
+    public MobDropConfig getDrops(EntityType entityType) {
+        return entityDrops.get(entityType);
     }
 
     public static class MobDropConfig {

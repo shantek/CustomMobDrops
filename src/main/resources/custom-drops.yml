@@ -2,18 +2,18 @@ mobs:
   creeper:
     drop-all: true
     drops:
-      - item: GUNPOWDER
-        min: 0
-        max: 5
-      - item: CARROT
-        min: 0
-        max: 2
+      gunpowder:
+        min: 5
+        max: 50
+      carrot:
+        min: 5
+        max: 50
   sheep:
     drop-all: false
     drops:
-      - item: WHITE_WOOL
+      white_wool:
         min: 50
         max: 200
-      - item: CARROT
-        min: 0
+      carrot:
+        min: 5
         max: 20
