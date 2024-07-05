@@ -12,6 +12,7 @@ public class Functions {
         this.plugin = plugin;
     }
 
+    // Function used to send individual messages/errors to the player
     public void sendMessage(CommandSender sender, String message, boolean isError) {
         if (sender == null) {
             if (isError) {
