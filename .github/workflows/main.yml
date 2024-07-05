@@ -49,8 +49,12 @@ jobs:
         id: fetch_commits
         run: |
           git fetch --tags
-          LAST_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --max-count=1))
-          COMMIT_MESSAGES=$(git log $LAST_TAG..HEAD --pretty=format:"- %s")
+          if [ -z "$(git tag)" ]; then
+            COMMIT_MESSAGES=$(git log --pretty=format:"- %s")
+          else
+            LAST_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --max-count=1))
+            COMMIT_MESSAGES=$(git log $LAST_TAG..HEAD --pretty=format:"- %s")
+          fi
           echo "COMMIT_MESSAGES<<EOF" >> $GITHUB_ENV
           echo "Full Changelog:" >> $GITHUB_ENV
           echo "" >> $GITHUB_ENV
