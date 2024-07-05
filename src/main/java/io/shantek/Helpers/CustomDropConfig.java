@@ -9,10 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.CommandSender;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CustomDropConfig {
 
@@ -88,6 +85,10 @@ public class CustomDropConfig {
 
     public MobDropConfig getDrops(EntityType entityType) {
         return entityDrops.get(entityType);
+    }
+
+    public Map<EntityType, MobDropConfig> getEntityDrops() {
+        return entityDrops;
     }
 
     public static class MobDropConfig {

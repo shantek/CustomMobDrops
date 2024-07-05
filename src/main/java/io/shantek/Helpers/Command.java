@@ -1,11 +1,15 @@
 package io.shantek.Helpers;
 
 import io.shantek.CustomDrops;
+import io.shantek.Helpers.CustomDropConfig.MobDropConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.EntityType;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Command implements CommandExecutor {
 
@@ -35,7 +39,6 @@ public class Command implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("enable")) {
                 if (sender.hasPermission("shantek.customdrops.enable") || sender.isOp()) {
                     customDrops.pluginConfig.setCustomDropsEnabled(true);
-                    functions.sendMessage(sender, "Custom drops are now enabled.", false);
                     Bukkit.broadcastMessage(ChatColor.GREEN + "Custom drops are now enabled.");
                     return true;
                 } else {
@@ -45,18 +48,29 @@ public class Command implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("disable")) {
                 if (sender.hasPermission("shantek.customdrops.enable") || sender.isOp()) {
                     customDrops.pluginConfig.setCustomDropsEnabled(false);
-                    functions.sendMessage(sender, "Custom drops are now disabled.", false);
                     Bukkit.broadcastMessage(ChatColor.RED + "Custom drops are now disabled.");
                     return true;
                 } else {
                     functions.sendMessage(sender, "You do not have permission to disable custom drops.", true);
                     return true;
                 }
+            } else if (args[0].equalsIgnoreCase("list")) {
+                Set<EntityType> entityTypes = customDrops.customDropConfig.getEntityDrops().keySet();
+                if (entityTypes.isEmpty()) {
+                    functions.sendMessage(sender, "No custom drops are active.", false);
+                } else {
+                    String mobsList = entityTypes.stream()
+                            .map(Enum::name)
+                            .collect(Collectors.joining(", "));
+                    sender.sendMessage(ChatColor.GREEN + "Custom drops are enabled for the following mobs:");
+                    sender.sendMessage(ChatColor.WHITE + mobsList);
+                }
+                return true;
             }
         }
 
         // Show usage message if command is invalid
-        functions.sendMessage(sender, "Invalid command usage. Use /customdrops [reload | enable | disable]", true);
+        functions.sendMessage(sender, "Invalid command usage. Use /customdrops [reload | enable | disable | list]", true);
         return false;
     }
 }

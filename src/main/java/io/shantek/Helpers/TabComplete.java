@@ -19,10 +19,11 @@ public class TabComplete implements TabCompleter {
 
         if (command.getName().equalsIgnoreCase("customdrops")) {
             if (args.length == 1) {
-                if (sender.hasPermission("shantek.customdrops.reload")) {
+                commands.add("list");
+                if (sender.isOp() || sender.hasPermission("shantek.customdrops.reload")) {
                     commands.add("reload");
                 }
-                if (sender.hasPermission("shantek.customdrops.enable")) {
+                if (sender.isOp() || sender.hasPermission("shantek.customdrops.enable")) {
                     commands.add("enable");
                     commands.add("disable");
                 }
