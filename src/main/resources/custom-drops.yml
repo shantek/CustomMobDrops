@@ -1,19 +1,7 @@
 mobs:
-  creeper:
-    drop-all: true
-    drops:
-      gunpowder:
-        min: 5
-        max: 50
-      carrot:
-        min: 5
-        max: 50
-  sheep:
+  shulker:
     drop-all: false
     drops:
-      white_wool:
-        min: 50
-        max: 200
-      carrot:
-        min: 5
-        max: 20
+      SHULKER_SHELL:
+        min: 1
+        max: 5

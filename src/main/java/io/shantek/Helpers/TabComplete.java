@@ -13,13 +13,18 @@ public class TabComplete implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (args.length == 0 && alias.startsWith("customdrops")) {
-            List<String> completions = new ArrayList();
-            completions.add("reload");
-            return StringUtil.copyPartialMatches(args[0], completions, new ArrayList<>());
-        } else {
-            return null;
-        }
-    }
+        List<String> completions = new ArrayList<>();
+        List<String> commands = new ArrayList<>();
 
+        if (command.getName().equalsIgnoreCase("customdrops")) {
+            if (args.length == 1) {
+                commands.add("reload");
+                commands.add("enable");
+                commands.add("disable");
+                StringUtil.copyPartialMatches(args[0], commands, completions);
+                Collections.sort(completions);
+            }
+        }
+        return completions;
+    }
 }

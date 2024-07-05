@@ -1,0 +1,3 @@
+## Enable or disable the custom drops.
+## Valid values are true or false
+custom-drops-enabled: true

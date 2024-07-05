@@ -7,9 +7,23 @@ main: io.shantek.CustomDrops
 commands:
   customdrops:
     description: Main command for managing custom mob drops.
-    usage: /customdrops ]
+    usage: /customdrops [reload|enable|disable]
     aliases: [drops]
     subcommands:
       reload:
         description: Used to reload the plugin
         usage: /customdrops reload
+      enable:
+        description: Enable custom drops
+        usage: /customdrops enable
+      disable:
+        description: Disable custom drops
+        usage: /customdrops disable
+
+permissions:
+  shantek.customdrops.reload:
+    description: Allows the player to reload the plugin
+    default: op
+  shantek.customdrops.enable:
+    description: Allows the player to enable or disable custom drops
+    default: op
