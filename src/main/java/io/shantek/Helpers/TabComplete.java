@@ -3,6 +3,7 @@ package io.shantek.Helpers;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
@@ -18,9 +19,13 @@ public class TabComplete implements TabCompleter {
 
         if (command.getName().equalsIgnoreCase("customdrops")) {
             if (args.length == 1) {
-                commands.add("reload");
-                commands.add("enable");
-                commands.add("disable");
+                if (sender.hasPermission("shantek.customdrops.reload")) {
+                    commands.add("reload");
+                }
+                if (sender.hasPermission("shantek.customdrops.enable")) {
+                    commands.add("enable");
+                    commands.add("disable");
+                }
                 StringUtil.copyPartialMatches(args[0], commands, completions);
                 Collections.sort(completions);
             }
