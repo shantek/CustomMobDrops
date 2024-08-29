@@ -1,6 +1,6 @@
 package io.shantek.Helpers;
 
-import io.shantek.CustomDrops;
+import io.shantek.CustomMobDrops;
 import io.shantek.Helpers.CustomDropConfig.MobDropConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 public class Command implements CommandExecutor {
 
-    public CustomDrops customDrops;
+    public CustomMobDrops customDrops;
     private final Functions functions;
 
-    public Command(CustomDrops customDrops) {
+    public Command(CustomMobDrops customDrops) {
         this.customDrops = customDrops;
         this.functions = new Functions(customDrops);
     }
@@ -38,7 +38,7 @@ public class Command implements CommandExecutor {
                 }
             } else if (args[0].equalsIgnoreCase("enable")) {
                 if (sender.hasPermission("shantek.customdrops.enable") || sender.isOp()) {
-                    customDrops.pluginConfig.setCustomDropsEnabled(true);
+                    customDrops.pluginConfig.setCustomMobDropsEnabled(true);
                     Bukkit.broadcastMessage(ChatColor.GREEN + "Custom drops are now enabled.");
                     return true;
                 } else {
@@ -47,7 +47,7 @@ public class Command implements CommandExecutor {
                 }
             } else if (args[0].equalsIgnoreCase("disable")) {
                 if (sender.hasPermission("shantek.customdrops.enable") || sender.isOp()) {
-                    customDrops.pluginConfig.setCustomDropsEnabled(false);
+                    customDrops.pluginConfig.setCustomMobDropsEnabled(false);
                     Bukkit.broadcastMessage(ChatColor.RED + "Custom drops are now disabled.");
                     return true;
                 } else {
