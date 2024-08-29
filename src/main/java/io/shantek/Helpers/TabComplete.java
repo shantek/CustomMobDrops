@@ -17,13 +17,13 @@ public class TabComplete implements TabCompleter {
         List<String> completions = new ArrayList<>();
         List<String> commands = new ArrayList<>();
 
-        if (command.getName().equalsIgnoreCase("customdrops")) {
+        if (command.getName().equalsIgnoreCase("custommobdrops")) {
             if (args.length == 1) {
                 commands.add("list");
-                if (sender.isOp() || sender.hasPermission("shantek.customdrops.reload")) {
+                if (sender.isOp() || sender.hasPermission("shantek.custommobdrops.reload")) {
                     commands.add("reload");
                 }
-                if (sender.isOp() || sender.hasPermission("shantek.customdrops.enable")) {
+                if (sender.isOp() || sender.hasPermission("shantek.custommobdrops.enable")) {
                     commands.add("enable");
                     commands.add("disable");
                 }

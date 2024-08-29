@@ -1,6 +1,6 @@
 package io.shantek.Listeners;
 
-import io.shantek.CustomDrops;
+import io.shantek.CustomMobDrops;
 import io.shantek.Helpers.CustomDropConfig;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -16,15 +16,15 @@ import java.util.Random;
 public class EntityDeath implements Listener {
 
     private final Random random = new Random();
-    private final CustomDrops plugin;
+    private final CustomMobDrops plugin;
 
-    public EntityDeath(CustomDrops plugin) {
+    public EntityDeath(CustomMobDrops plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
-        if (!plugin.pluginConfig.isCustomDropsEnabled()) {
+        if (!plugin.pluginConfig.isCustomMobDropsEnabled()) {
             return;
         }
 

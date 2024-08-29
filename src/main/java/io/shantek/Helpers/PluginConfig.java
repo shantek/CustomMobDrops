@@ -1,6 +1,6 @@
 package io.shantek.Helpers;
 
-import io.shantek.CustomDrops;
+import io.shantek.CustomMobDrops;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,11 +26,11 @@ public class PluginConfig {
         plugin.saveConfig();
     }
 
-    public boolean isCustomDropsEnabled() {
+    public boolean isCustomMobDropsEnabled() {
         return customDropsEnabled;
     }
 
-    public void setCustomDropsEnabled(boolean customDropsEnabled) {
+    public void setCustomMobDropsEnabled(boolean customDropsEnabled) {
         this.customDropsEnabled = customDropsEnabled;
         saveConfig();
     }

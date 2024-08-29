@@ -1,18 +1,17 @@
 package io.shantek;
 
-import io.shantek.Helpers.Command;
-import io.shantek.Helpers.PluginConfig;
-import io.shantek.Helpers.CustomDropConfig;
-import io.shantek.Helpers.TabComplete;
+import io.shantek.Helpers.*;
 import io.shantek.Listeners.EntityDeath;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class CustomDrops extends JavaPlugin {
+public class CustomMobDrops extends JavaPlugin {
 
     public CustomDropConfig customDropConfig;
     public PluginConfig pluginConfig;
-    public static CustomDrops instance;
+    public static CustomMobDrops instance;
+
+    public Metrics metrics;
 
     @Override
     public void onEnable() {
@@ -26,13 +25,17 @@ public class CustomDrops extends JavaPlugin {
         customDropConfig = new CustomDropConfig(this);
         customDropConfig.loadConfig();
 
-        getCommand("customdrops").setExecutor(new Command(this));
-        getCommand("customdrops").setTabCompleter(new TabComplete());
+        getCommand("custommobdrops").setExecutor(new Command(this));
+        getCommand("custommobdrops").setTabCompleter(new TabComplete());
 
         // Register the plugin listeners
         registerPluginListeners();
 
-        this.getLogger().info("CustomDrops plugin started.");
+        this.getLogger().info("CustomMobDrops plugin started.");
+
+        int pluginId = 23219;
+        Metrics metrics = new Metrics(this, pluginId);
+
     }
 
     private void registerPluginListeners() {
