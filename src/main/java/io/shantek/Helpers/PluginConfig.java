@@ -8,6 +8,7 @@ public class PluginConfig {
     private final JavaPlugin plugin;
     private boolean customMobDropsEnabled;
     private boolean lootingMultiplierEnabled;
+    private boolean debuggingEnabled;
 
     public PluginConfig(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -17,33 +18,16 @@ public class PluginConfig {
     public void loadConfig() {
         plugin.saveDefaultConfig();
         FileConfiguration config = plugin.getConfig();
-
-        // Check and load 'custom-drops-enabled'
-        if (config.isBoolean("custom-drops-enabled")) {
-            customMobDropsEnabled = config.getBoolean("custom-drops-enabled");
-        } else {
-            customMobDropsEnabled = true; // Default value
-            plugin.getLogger().warning("Invalid value for 'custom-drops-enabled'. Defaulting to true.");
-            config.set("custom-drops-enabled", customMobDropsEnabled); // Correct the config
-        }
-
-        // Check and load 'looting-multiplier-enabled'
-        if (config.isBoolean("looting-multiplier-enabled")) {
-            lootingMultiplierEnabled = config.getBoolean("looting-multiplier-enabled");
-        } else {
-            lootingMultiplierEnabled = true; // Default value
-            plugin.getLogger().warning("Invalid value for 'looting-multiplier-enabled'. Defaulting to true.");
-            config.set("looting-multiplier-enabled", lootingMultiplierEnabled); // Correct the config
-        }
-
-        // Save any corrected values back to the config file
-        plugin.saveConfig();
+        customMobDropsEnabled = config.getBoolean("custom-drops-enabled", true);
+        lootingMultiplierEnabled = config.getBoolean("looting-multiplier-enabled", true);
+        debuggingEnabled = config.getBoolean("debugging-enabled", false);  // Added line
     }
 
     public void saveConfig() {
         FileConfiguration config = plugin.getConfig();
         config.set("custom-drops-enabled", customMobDropsEnabled);
         config.set("looting-multiplier-enabled", lootingMultiplierEnabled);
+        config.set("debugging-enabled", debuggingEnabled);  // Added line
         plugin.saveConfig();
     }
 
@@ -62,6 +46,15 @@ public class PluginConfig {
 
     public void setLootingMultiplierEnabled(boolean lootingMultiplierEnabled) {
         this.lootingMultiplierEnabled = lootingMultiplierEnabled;
+        saveConfig();
+    }
+
+    public boolean isDebuggingEnabled() {  // Added method
+        return debuggingEnabled;
+    }
+
+    public void setDebuggingEnabled(boolean debuggingEnabled) {  // Added method
+        this.debuggingEnabled = debuggingEnabled;
         saveConfig();
     }
 }

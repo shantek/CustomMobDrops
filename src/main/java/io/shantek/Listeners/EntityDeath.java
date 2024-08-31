@@ -70,35 +70,52 @@ public class EntityDeath implements Listener {
 
         int min = drop.getMin();
         int max = drop.getMax();
-        int amount = random.nextInt(max - min + 1) + min;
+        int range = max - min + 1;
+        int amount;
 
-        plugin.getLogger().info("Player " + playerName + " is using looting level: " + lootingLevel);
-        plugin.getLogger().info("Initial drop range: " + min + " to " + max + " (base drop amount before looting): " + amount);
+        if (plugin.pluginConfig.isLootingMultiplierEnabled()) {
+            if (lootingLevel > 0) {
+                double lootingFactor = Math.pow(random.nextDouble(), 1.0 / (1.0 + lootingLevel * 0.5));
+                amount = (int) (min + lootingFactor * range);
 
-        if (plugin.pluginConfig.isLootingMultiplierEnabled() && lootingLevel > 0) {
-            double multiplier = 1.0 + (lootingLevel * 0.10);
-            amount = (int) Math.floor(amount * multiplier);
-            plugin.getLogger().info("Looting multiplier applied: " + multiplier + ", adjusted drop amount: " + amount);
+                int bonusAmount = lootingLevel * (range / 15);
+                amount += bonusAmount;
+
+                if (amount > max) {
+                    amount = max;
+                }
+            } else {
+                double lootingBias = 0.75;
+                double randomValue = Math.pow(random.nextDouble(), 1.0 + lootingBias);
+                amount = (int) (min + randomValue * range);
+            }
+        } else {
+            amount = random.nextInt(range) + min;
+        }
+
+        if (plugin.pluginConfig.isDebuggingEnabled()) {  // Only show debug info if debugging is enabled
+            plugin.getLogger().info("Player " + playerName + " is using looting level: " + lootingLevel);
+            plugin.getLogger().info("Initial drop range: " + min + " to " + max);
+            plugin.getLogger().info("Final drop amount: " + amount);
         }
 
         if (amount > 0) {
             ItemStack itemStack = new ItemStack(material, amount);
             killedEntity.getWorld().dropItemNaturally(killedEntity.getLocation(), itemStack);
-            plugin.getLogger().info("Final drop amount for " + itemName + ": " + amount);
-        } else {
-            plugin.getLogger().info("No items dropped for " + itemName + " (final drop amount: " + amount + ")");
         }
 
-        if (killedEntity instanceof LivingEntity livingEntity) {
+        if (plugin.pluginConfig.isDebuggingEnabled() && killedEntity instanceof LivingEntity) {
+            LivingEntity livingEntity = (LivingEntity) killedEntity;
             if (livingEntity.getKiller() != null) {
                 livingEntity.getKiller().sendMessage(
                         "Debug: Drop calculation for " + killedEntity.getType().name() + "\n" +
                                 "Initial drop range: " + min + " to " + max + "\n" +
                                 "Looting level: " + lootingLevel + "\n" +
-                                "Multiplier applied: " + (plugin.pluginConfig.isLootingMultiplierEnabled() ? lootingLevel * 0.10 : 0) + "\n" +
                                 "Final drop amount: " + amount
                 );
             }
         }
     }
+
+
 }

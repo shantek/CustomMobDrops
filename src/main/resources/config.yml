@@ -6,3 +6,8 @@ custom-drops-enabled: true
 ## When enabled, the drop amounts will be increased based on the looting level.
 ## Valid values are true or false
 looting-multiplier-enabled: true
+
+## Enable or disable debugging messages.
+## When enabled, detailed drop calculation messages will be sent to players.
+## Valid values are true or false
+debugging-enabled: false
