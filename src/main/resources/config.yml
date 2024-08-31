@@ -1,3 +1,8 @@
 ## Enable or disable the custom drops.
 ## Valid values are true or false
 custom-drops-enabled: true
+
+## Enable or disable the looting multiplier.
+## When enabled, the drop amounts will be increased based on the looting level.
+## Valid values are true or false
+looting-multiplier-enabled: true

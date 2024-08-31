@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.enchantments.Enchantment;
 
 import java.util.List;
 import java.util.Random;
@@ -40,20 +41,24 @@ public class EntityDeath implements Listener {
             List<CustomDropConfig.DropItemConfig> drops = mobDropConfig.getDrops();
             boolean dropAll = mobDropConfig.isDropAll();
 
+            int lootingLevel = event.getEntity().getKiller() != null
+                    ? event.getEntity().getKiller().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS)
+                    : 0;
+
             if (dropAll) {
                 for (CustomDropConfig.DropItemConfig drop : drops) {
-                    processDrop(drop, killedEntity);
+                    processDrop(drop, killedEntity, lootingLevel);
                 }
             } else {
                 if (!drops.isEmpty()) {
                     CustomDropConfig.DropItemConfig drop = drops.get(random.nextInt(drops.size()));
-                    processDrop(drop, killedEntity);
+                    processDrop(drop, killedEntity, lootingLevel);
                 }
             }
         }
     }
 
-    private void processDrop(CustomDropConfig.DropItemConfig drop, Entity killedEntity) {
+    private void processDrop(CustomDropConfig.DropItemConfig drop, Entity killedEntity, int lootingLevel) {
         String itemName = drop.getItem();
         Material material = Material.getMaterial(itemName.toUpperCase());
 
@@ -65,6 +70,11 @@ public class EntityDeath implements Listener {
         int min = drop.getMin();
         int max = drop.getMax();
         int amount = random.nextInt(max - min + 1) + min;
+
+        if (plugin.pluginConfig.isLootingMultiplierEnabled() && lootingLevel > 0) {
+            double multiplier = 1.0 + (lootingLevel * 0.10);
+            amount = (int) Math.floor(amount * multiplier);
+        }
 
         if (amount > 0) {
             ItemStack itemStack = new ItemStack(material, amount);

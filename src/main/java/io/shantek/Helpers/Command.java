@@ -1,19 +1,16 @@
 package io.shantek.Helpers;
 
 import io.shantek.CustomMobDrops;
-import io.shantek.Helpers.CustomDropConfig.MobDropConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Command implements CommandExecutor {
 
-    public CustomMobDrops customDrops;
+    private final CustomMobDrops customDrops;
     private final Functions functions;
 
     public Command(CustomMobDrops customDrops) {
@@ -29,8 +26,8 @@ public class Command implements CommandExecutor {
             if (args[0].equalsIgnoreCase("reload")) {
                 if (sender.hasPermission("shantek.custommobdrops.reload") || sender.isOp()) {
                     customDrops.customDropConfig.loadConfig(sender);
-                    functions.sendMessage(sender, "Customdrops config file reloaded.", false);
-                    customDrops.getLogger().info("Customdrops config file reloaded.");
+                    functions.sendMessage(sender, "Custom mob drops config file reloaded.", false);
+                    customDrops.getLogger().info("Custom mob drops config file reloaded.");
                     return true;
                 } else {
                     functions.sendMessage(sender, "You do not have permission to reload the plugin.", true);
@@ -39,6 +36,7 @@ public class Command implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("enable")) {
                 if (sender.hasPermission("shantek.custommobdrops.enable") || sender.isOp()) {
                     customDrops.pluginConfig.setCustomMobDropsEnabled(true);
+                    functions.sendMessage(sender, "Custom mob drops are now enabled.", false);
                     Bukkit.broadcastMessage(ChatColor.GREEN + "Custom drops are now enabled.");
                     return true;
                 } else {
@@ -46,8 +44,9 @@ public class Command implements CommandExecutor {
                     return true;
                 }
             } else if (args[0].equalsIgnoreCase("disable")) {
-                if (sender.hasPermission("shantek.custommobdrops.enable") || sender.isOp()) {
+                if (sender.hasPermission("shantek.customdrops.enable") || sender.isOp()) {
                     customDrops.pluginConfig.setCustomMobDropsEnabled(false);
+                    functions.sendMessage(sender, "Custom mob drops are now disabled.", false);
                     Bukkit.broadcastMessage(ChatColor.RED + "Custom drops are now disabled.");
                     return true;
                 } else {
@@ -55,7 +54,7 @@ public class Command implements CommandExecutor {
                     return true;
                 }
             } else if (args[0].equalsIgnoreCase("list")) {
-                Set<EntityType> entityTypes = customDrops.customDropConfig.getEntityDrops().keySet();
+                var entityTypes = customDrops.customDropConfig.getEntityDrops().keySet();
                 if (entityTypes.isEmpty()) {
                     functions.sendMessage(sender, "No custom drops are active.", false);
                 } else {
