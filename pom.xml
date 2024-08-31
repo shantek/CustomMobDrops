@@ -6,10 +6,10 @@
 
     <groupId>io.shantek</groupId>
     <artifactId>CustomMobDrops</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <packaging>jar</packaging>
 
-    <name>CustomDrops</name>
+    <name>CustomMobDrops</name>
 
     <properties>
         <java.version>16</java.version>

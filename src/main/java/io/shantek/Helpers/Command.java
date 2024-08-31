@@ -44,7 +44,7 @@ public class Command implements CommandExecutor {
                     return true;
                 }
             } else if (args[0].equalsIgnoreCase("disable")) {
-                if (sender.hasPermission("shantek.customdrops.enable") || sender.isOp()) {
+                if (sender.hasPermission("shantek.custommobdrops.enable") || sender.isOp()) {
                     customDrops.pluginConfig.setCustomMobDropsEnabled(false);
                     functions.sendMessage(sender, "Custom mob drops are now disabled.", false);
                     Bukkit.broadcastMessage(ChatColor.RED + "Custom drops are now disabled.");
