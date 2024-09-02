@@ -36,7 +36,6 @@ public class Command implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("enable")) {
                 if (sender.hasPermission("shantek.custommobdrops.enable") || sender.isOp()) {
                     customDrops.pluginConfig.setCustomMobDropsEnabled(true);
-                    functions.sendMessage(sender, "Custom mob drops are now enabled.", false);
                     Bukkit.broadcastMessage(ChatColor.GREEN + "Custom drops are now enabled.");
                     return true;
                 } else {
@@ -46,7 +45,6 @@ public class Command implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("disable")) {
                 if (sender.hasPermission("shantek.custommobdrops.enable") || sender.isOp()) {
                     customDrops.pluginConfig.setCustomMobDropsEnabled(false);
-                    functions.sendMessage(sender, "Custom mob drops are now disabled.", false);
                     Bukkit.broadcastMessage(ChatColor.RED + "Custom drops are now disabled.");
                     return true;
                 } else {
