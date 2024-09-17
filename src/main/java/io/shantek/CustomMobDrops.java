@@ -35,7 +35,6 @@ public class CustomMobDrops extends JavaPlugin {
 
         int pluginId = 23219;
         Metrics metrics = new Metrics(this, pluginId);
-
     }
 
     private void registerPluginListeners() {

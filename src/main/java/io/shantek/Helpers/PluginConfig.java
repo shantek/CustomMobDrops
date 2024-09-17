@@ -8,7 +8,7 @@ public class PluginConfig {
     private final JavaPlugin plugin;
     private boolean customMobDropsEnabled;
     private boolean lootingMultiplierEnabled;
-    private boolean debuggingEnabled;
+    public boolean debuggingEnabled;
 
     public PluginConfig(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -20,14 +20,14 @@ public class PluginConfig {
         FileConfiguration config = plugin.getConfig();
         customMobDropsEnabled = config.getBoolean("custom-drops-enabled", true);
         lootingMultiplierEnabled = config.getBoolean("looting-multiplier-enabled", true);
-        debuggingEnabled = config.getBoolean("debugging-enabled", false);  // Added line
+        debuggingEnabled = config.getBoolean("debugging-enabled", false);
     }
 
     public void saveConfig() {
         FileConfiguration config = plugin.getConfig();
         config.set("custom-drops-enabled", customMobDropsEnabled);
         config.set("looting-multiplier-enabled", lootingMultiplierEnabled);
-        config.set("debugging-enabled", debuggingEnabled);  // Added line
+        config.set("debugging-enabled", debuggingEnabled);
         plugin.saveConfig();
     }
 
