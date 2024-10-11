@@ -1,4 +1,4 @@
-[![License: GPL](https://img.shields.io/badge/license-GPL-blue.svg)](LICENSE) [![Discord](https://img.shields.io/discord/628396916639793152.svg?color=%237289da&label=discord)](https://shantek.co/discord)
+[![License: GPL](https://img.shields.io/badge/license-GPL-blue.svg)](LICENSE) [![Discord](https://img.shields.io/discord/628396916639793152.svg?color=%237289da&label=discord)](https://shantek.co/discord) [![CodeFactor](https://www.codefactor.io/repository/github/shantek/custommobdrops/badge)](https://www.codefactor.io/repository/github/shantek/custommobdrops)
 
 ## Commands
 
