@@ -1,7 +1,6 @@
 [![License: GPL](https://img.shields.io/badge/license-GPL-blue.svg)](LICENSE)
 [![Discord](https://img.shields.io/discord/628396916639793152.svg?color=%237289da&label=discord)](https://shantek.co/discord)
 [![CodeFactor](https://www.codefactor.io/repository/github/shantek/custommobdrops/badge)](https://www.codefactor.io/repository/github/shantek/custommobdrops)
-![Plugin Stats](https://bstats.org/signatures/bukkit/Custom%20Mob%20Drops.svg)
 
 # 🧟 Custom Mob Drops
 
@@ -69,3 +68,7 @@ This plugin lets you fully customize what mobs drop on death, allowing for serve
 
 Distributed under the **GNU General Public License v3.0**.  
 See [`LICENSE`](LICENSE) for full license details.
+
+---
+
+![Plugin Stats](https://bstats.org/signatures/bukkit/Custom%20Mob%20Drops.svg)
