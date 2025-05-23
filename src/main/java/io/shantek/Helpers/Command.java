@@ -26,7 +26,9 @@ public class Command implements CommandExecutor {
             if (args[0].equalsIgnoreCase("reload")) {
                 if (sender.hasPermission("shantek.custommobdrops.reload") || sender.isOp()) {
                     customDrops.customDropConfig.loadConfig(sender);
-                    functions.sendMessage(sender, "Custom mob drops config file reloaded.", false);
+                    int count = customDrops.customDropConfig.getEntityDrops().size();
+                    functions.sendMessage(sender, "Reloaded config: " + count + " mobs configured.", false);
+
                     customDrops.getLogger().info("Custom mob drops config file reloaded.");
                     return true;
                 } else {
