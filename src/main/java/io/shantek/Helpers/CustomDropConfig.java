@@ -45,14 +45,26 @@ public class CustomDropConfig {
         for (String entity : mobsSection.getKeys(false)) {
             try {
                 EntityType entityType = EntityType.valueOf(entity.toUpperCase());
-                boolean dropAll = mobsSection.getBoolean(entity + ".drop-all", false);
-                ConfigurationSection dropsSection = mobsSection.getConfigurationSection(entity + ".drops");
+
+                ConfigurationSection mobSection = mobsSection.getConfigurationSection(entity);
+                if (mobSection == null) continue;
+
+                boolean enabled = mobSection.getBoolean("enabled", true);
+                if (!enabled) {
+                    plugin.getLogger().info("Skipping drops for " + entityType.name() + " (disabled in config).");
+                    continue;
+                }
+
+                boolean cancelVanilla = mobSection.getBoolean("cancel-vanilla-drops", false);
+                boolean dropAll = mobSection.getBoolean("drop-all", false);
+
+                ConfigurationSection dropsSection = mobSection.getConfigurationSection("drops");
                 if (dropsSection == null) {
                     functions.sendMessage(sender, "No 'drops' section found for entity: " + entity, true);
                 } else {
                     List<DropItemConfig> drops = loadDrops(dropsSection, entity, sender);
                     if (!drops.isEmpty()) {
-                        entityDrops.put(entityType, new MobDropConfig(dropAll, drops));
+                        entityDrops.put(entityType, new MobDropConfig(enabled, cancelVanilla, dropAll, drops));
                         plugin.getLogger().info("Configured drops for " + entityType.name() + ": " + drops.size() + " items.");
                     }
                 }
@@ -60,6 +72,7 @@ public class CustomDropConfig {
                 functions.sendMessage(sender, "Invalid entity type in custom-drops.yml: " + entity, true);
             }
         }
+
     }
 
     private List<DropItemConfig> loadDrops(ConfigurationSection dropsSection, String entity, CommandSender sender) {
@@ -92,12 +105,20 @@ public class CustomDropConfig {
     }
 
     public static class MobDropConfig {
-        private final boolean dropAll;
-        private final List<DropItemConfig> drops;
+        public final boolean enabled;
+        public final boolean cancelVanillaDrops;
+        public final boolean dropAll;
+        public final List<DropItemConfig> drops;
 
-        public MobDropConfig(boolean dropAll, List<DropItemConfig> drops) {
+        public MobDropConfig(boolean enabled, boolean cancelVanillaDrops, boolean dropAll, List<DropItemConfig> drops) {
+            this.enabled = enabled;
+            this.cancelVanillaDrops = cancelVanillaDrops;
             this.dropAll = dropAll;
             this.drops = drops;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
         }
 
         public boolean isDropAll() {
@@ -108,6 +129,7 @@ public class CustomDropConfig {
             return drops;
         }
     }
+
 
     public static class DropItemConfig {
         private final String item;

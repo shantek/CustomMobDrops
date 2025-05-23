@@ -30,34 +30,41 @@ public class EntityDeath implements Listener {
             return;
         }
 
+
         Entity killedEntity = event.getEntity();
         EntityType entityType = killedEntity.getType();
 
         CustomDropConfig.MobDropConfig mobDropConfig = plugin.customDropConfig.getDrops(entityType);
 
-        if (mobDropConfig != null) {
-            // Clear the default drops
-            event.getDrops().clear();
+        if (mobDropConfig == null || !mobDropConfig.isEnabled()) {
+            return;
+        }
 
-            List<CustomDropConfig.DropItemConfig> drops = mobDropConfig.getDrops();
-            boolean dropAll = mobDropConfig.isDropAll();
 
-            int lootingLevel = event.getEntity().getKiller() != null
-                    ? event.getEntity().getKiller().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS)
-                    : 0;
+        // Should we cancel the vanilla drops?
+        if (mobDropConfig.cancelVanillaDrops) {
+            event.getDrops().clear(); // Remove vanilla drops
+        }
 
-            if (dropAll) {
-                for (CustomDropConfig.DropItemConfig drop : drops) {
-                    processDrop(drop, killedEntity, lootingLevel, event.getEntity().getKiller().getName());
-                }
-            } else {
-                if (!drops.isEmpty()) {
-                    CustomDropConfig.DropItemConfig drop = drops.get(random.nextInt(drops.size()));
-                    processDrop(drop, killedEntity, lootingLevel, event.getEntity().getKiller().getName());
-                }
+        List<CustomDropConfig.DropItemConfig> drops = mobDropConfig.getDrops();
+        boolean dropAll = mobDropConfig.isDropAll();
+
+        int lootingLevel = event.getEntity().getKiller() != null
+                ? event.getEntity().getKiller().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS)
+                : 0;
+
+        if (dropAll) {
+            for (CustomDropConfig.DropItemConfig drop : drops) {
+                processDrop(drop, killedEntity, lootingLevel, event.getEntity().getKiller().getName());
+            }
+        } else {
+            if (!drops.isEmpty()) {
+                CustomDropConfig.DropItemConfig drop = drops.get(random.nextInt(drops.size()));
+                processDrop(drop, killedEntity, lootingLevel, event.getEntity().getKiller().getName());
             }
         }
     }
+
 
     private void processDrop(CustomDropConfig.DropItemConfig drop, Entity killedEntity, int lootingLevel, String playerName) {
         String itemName = drop.getItem();
