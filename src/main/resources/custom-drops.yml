@@ -1,5 +1,7 @@
 mobs:
   shulker:
+    enabled: true
+    cancel-vanilla-drops: false
     drop-all: false
     drops:
       SHULKER_SHELL:
