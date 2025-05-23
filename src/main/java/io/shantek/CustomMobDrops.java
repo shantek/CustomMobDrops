@@ -31,7 +31,7 @@ public class CustomMobDrops extends JavaPlugin {
         // Register the plugin listeners
         registerPluginListeners();
 
-        this.getLogger().info("CustomMobDrops plugin started.");
+        this.getLogger().info("Custom Mob Drops plugin started.");
 
         int pluginId = 23219;
         Metrics metrics = new Metrics(this, pluginId);
