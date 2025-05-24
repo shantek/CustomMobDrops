@@ -58,7 +58,6 @@ This plugin lets you fully customize what mobs drop on death, allowing for serve
 ## 🌐 External Links
 
 - 💬 [Join the Discord](https://shantek.co/discord)
-- 🛠️ [GitHub Repository](https://github.com/shantek/CustomMobDrops)
 - 🐞 [Report Issues / Suggestions](https://github.com/shantek/CustomMobDrops/issues)
 - ❤️ [Support via Patreon](https://shantek.co/patreon)
 
