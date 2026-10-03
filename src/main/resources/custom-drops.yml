@@ -1,31 +1,112 @@
+# ============================================================
+#  CustomMobDrops - custom-drops.yml
+# ============================================================
+#
+#  Each mob entry supports one or more "drop entries" under
+#  the "drops" list. When a mob is killed, the plugin works
+#  through the list from TOP to BOTTOM and uses the FIRST
+#  entry that the killer qualifies for (based on permission).
+#
+#  IMPORTANT: Put higher-tier / permission-gated entries FIRST.
+#  Put the open fallback entry (no permission) LAST.
+#
+#  Per-mob fields:
+#    enabled:           true/false — can also be toggled with
+#                       /drops enable <mob> and /drops disable <mob>
+#
+#  Per-drop-entry fields:
+#    permission:        (optional) Only players with this permission
+#                       receive this drop. Omit to apply to everyone.
+#    keep-vanilla-drops: (optional, default: false) If true, vanilla
+#                       drops are kept and custom drops are added on top.
+#    xp-multiplier:     (optional) Multiplies vanilla XP. e.g. 1.5 = +50% XP.
+#    drop-all:          (optional, default: false) If true, every item
+#                       in the list drops. If false, one item is chosen
+#                       using weighted random selection.
+#    items:             List of items to drop.
+#
+#  Per-item fields:
+#    item:              Bukkit material name (e.g. DIAMOND, SHULKER_SHELL)
+#    min:               Minimum drop amount
+#    max:               Maximum drop amount
+#    weight:            (optional) Relative chance weight for random selection.
+#                       If omitted or invalid, defaults to 1 (equal chance).
+#
+# ============================================================
+
 mobs:
+
+  # ----------------------------------------------------------
+  #  SHULKER — Bonus shells on top of vanilla drops.
+  #  VIP players get more shells with a better XP bonus.
+  #  Regular players get a smaller bonus.
+  #  Uses keep-vanilla-drops: true so vanilla shells still drop.
+  # ----------------------------------------------------------
   shulker:
-    enabled: false
-    cancel-vanilla-drops: false
-    drop-all: false
+    enabled: true
     drops:
-      SHULKER_SHELL:
-        min: 1
-        max: 5
+      # VIP tier — checked first
+      - permission: custommobdrops.vip
+        keep-vanilla-drops: true
+        xp-multiplier: 2.0
+        drop-all: false
+        items:
+          - item: SHULKER_SHELL
+            min: 2
+            max: 5
+            weight: 10
+
+      # Default tier — everyone else
+      - keep-vanilla-drops: true
+        xp-multiplier: 1.5
+        drop-all: false
+        items:
+          - item: SHULKER_SHELL
+            min: 1
+            max: 2
+            weight: 10
+
+  # ----------------------------------------------------------
+  #  WITHER — Drops roses AND a nether star (drop-all: true).
+  #  Vanilla drops are cancelled so only these items drop.
+  #  The nether star has a lower weight (rarer).
+  # ----------------------------------------------------------
   wither:
-    enabled: false
-    cancel-vanilla-drops: false
-    drop-all: true
+    enabled: true
     drops:
-      WITHER_ROSE:
-        min: 1
-        max: 5
-      DIAMOND:
-        min: 1
-        max: 3
+      - keep-vanilla-drops: false
+        xp-multiplier: 1.5
+        drop-all: true
+        items:
+          - item: WITHER_ROSE
+            min: 3
+            max: 8
+            weight: 10
+          - item: NETHER_STAR
+            min: 1
+            max: 2
+            weight: 3
+
+  # ----------------------------------------------------------
+  #  SKELETON — Random drop from a weighted loot table.
+  #  Bones are common, arrows less so, diamond is rare.
+  #  drop-all is false so only one item is chosen per kill.
+  # ----------------------------------------------------------
   skeleton:
-    enabled: false
-    cancel-vanilla-drops: false
-    drop-all: false
+    enabled: true
     drops:
-      WITHER_ROSE:
-        min: 1
-        max: 5
-      DIAMOND:
-        min: 1
-        max: 3
+      - keep-vanilla-drops: false
+        drop-all: false
+        items:
+          - item: BONE
+            min: 1
+            max: 4
+            weight: 60
+          - item: ARROW
+            min: 2
+            max: 6
+            weight: 30
+          - item: DIAMOND
+            min: 1
+            max: 1
+            weight: 3

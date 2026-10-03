@@ -1,6 +1,6 @@
 name: CustomMobDrops
-api-version: 1.15
-version: 0.2.0
+api-version: 1.21
+version: 0.3.0
 author: shantek.io
 main: io.shantek.CustomMobDrops
 
@@ -11,16 +11,16 @@ commands:
     aliases: [drops]
     subcommands:
       reload:
-        description: Used to reload the plugin
+        description: Reload the plugin config
         usage: /custommobdrops reload
       enable:
-        description: Enable custom drops
-        usage: /custommobdrops enable
+        description: Enable custom drops globally, or for a specific mob
+        usage: /custommobdrops enable [mob]
       disable:
-        description: Disable custom drops
-        usage: /custommobdrops disable
+        description: Disable custom drops globally, or for a specific mob
+        usage: /custommobdrops disable [mob]
       list:
-        description: List mobs with custom drops
+        description: List all configured mobs and their enabled state
         usage: /custommobdrops list
 
 permissions:
@@ -28,5 +28,8 @@ permissions:
     description: Allows the player to reload the plugin
     default: op
   shantek.custommobdrops.enable:
-    description: Allows the player to enable or disable custom drops
+    description: Allows the player to enable or disable custom drops globally
+    default: op
+  shantek.custommobdrops.manage:
+    description: Allows the player to enable or disable drops for specific mobs
     default: op

@@ -26,7 +26,7 @@ public class CustomMobDrops extends JavaPlugin {
         customDropConfig.loadConfig();
 
         getCommand("custommobdrops").setExecutor(new Command(this));
-        getCommand("custommobdrops").setTabCompleter(new TabComplete());
+        getCommand("custommobdrops").setTabCompleter(new TabComplete(this));
 
         // Register the plugin listeners
         registerPluginListeners();

@@ -8,7 +8,7 @@ public class PluginConfig {
     private final JavaPlugin plugin;
     private boolean customMobDropsEnabled;
     private boolean lootingMultiplierEnabled;
-    public boolean debuggingEnabled;
+    private boolean debuggingEnabled;
 
     public PluginConfig(JavaPlugin plugin) {
         this.plugin = plugin;
