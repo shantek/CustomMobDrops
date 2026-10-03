@@ -17,6 +17,10 @@
 #  Per-drop-entry fields:
 #    permission:        (optional) Only players with this permission
 #                       receive this drop. Omit to apply to everyone.
+#    require-player-kill: (optional, default: true) If true, this entry
+#                       only applies when a player kills the mob. Mobs
+#                       killed by farms, lava, fall damage etc. skip it
+#                       and fall through to the next entry (or vanilla).
 #    keep-vanilla-drops: (optional, default: false) If true, vanilla
 #                       drops are kept and custom drops are added on top.
 #    xp-multiplier:     (optional) Multiplies vanilla XP. e.g. 1.5 = +50% XP.

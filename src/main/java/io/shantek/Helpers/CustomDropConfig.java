@@ -79,6 +79,9 @@ public class CustomDropConfig {
 
             } catch (IllegalArgumentException e) {
                 functions.sendMessage(sender, "Invalid entity type in custom-drops.yml: " + entity, true);
+            } catch (RuntimeException e) {
+                // A malformed mob section shouldn't stop the remaining mobs from loading
+                functions.sendMessage(sender, "Failed to load drops for " + entity + ": " + e, true);
             }
         }
     }
@@ -89,6 +92,9 @@ public class CustomDropConfig {
 
         // keep-vanilla-drops (optional, default false)
         boolean keepVanilla = map.containsKey("keep-vanilla-drops") && Boolean.TRUE.equals(map.get("keep-vanilla-drops"));
+
+        // require-player-kill (optional, default true) — stops mob farms getting custom drops
+        boolean requirePlayerKill = !Boolean.FALSE.equals(map.get("require-player-kill"));
 
         // xp-multiplier (optional)
         double xpMultiplier = 1.0;
@@ -111,11 +117,16 @@ public class CustomDropConfig {
             return null;
         }
 
-        @SuppressWarnings("unchecked")
-        List<Map<String, Object>> itemsList = (List<Map<String, Object>>) itemsObj;
         int totalWeight = 0;
 
-        for (Map<String, Object> itemMap : itemsList) {
+        for (Object itemObj : (List<?>) itemsObj) {
+            if (!(itemObj instanceof Map)) {
+                functions.sendMessage(sender, "Invalid item entry in drop entry for " + entity + ": " + itemObj, true);
+                continue;
+            }
+            @SuppressWarnings("unchecked")
+            Map<String, Object> itemMap = (Map<String, Object>) itemObj;
+
             String itemName = itemMap.containsKey("item") ? String.valueOf(itemMap.get("item")) : null;
             if (itemName == null) continue;
 
@@ -125,8 +136,12 @@ public class CustomDropConfig {
                 continue;
             }
 
-            int min = itemMap.containsKey("min") ? (int) itemMap.get("min") : 1;
-            int max = itemMap.containsKey("max") ? (int) itemMap.get("max") : 1;
+            Integer min = parseInt(itemMap.get("min"), 1);
+            Integer max = parseInt(itemMap.get("max"), 1);
+            if (min == null || max == null || min < 0) {
+                functions.sendMessage(sender, "Invalid min/max for item " + itemName + " in " + entity + " (must be whole numbers, min >= 0), skipping.", true);
+                continue;
+            }
             if (min > max) {
                 functions.sendMessage(sender, "Invalid min/max for item " + itemName + " in " + entity + " (min > max), skipping.", true);
                 continue;
@@ -142,25 +157,40 @@ public class CustomDropConfig {
             }
 
             totalWeight += weight;
-            items.add(new DropItemConfig(itemName, min, max, weight));
+            items.add(new DropItemConfig(itemName, material, min, max, weight));
             plugin.getLogger().info("  Item: " + itemName + " (" + min + "-" + max + ", weight: " + weight + ")");
         }
 
         if (items.isEmpty()) return null;
 
-        return new DropEntryConfig(permission, keepVanilla, xpMultiplier, dropAll, items, totalWeight);
+        return new DropEntryConfig(permission, requirePlayerKill, keepVanilla, xpMultiplier, dropAll, items, totalWeight);
+    }
+
+    /**
+     * Parses a YAML value as a whole number. Returns the default when the value is
+     * absent, or null when it's present but not a whole number (e.g. "abc" or 1.5).
+     */
+    private Integer parseInt(Object value, int defaultValue) {
+        if (value == null) return defaultValue;
+        try {
+            return Integer.parseInt(String.valueOf(value).trim());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /**
      * Returns the first matching drop entry for the given entity type and killer.
      * Entries are evaluated in config order (highest tier first).
-     * If killer is null, only entries with no permission requirement are matched.
+     * If killer is null, only entries with no permission requirement and
+     * require-player-kill: false are matched.
      */
     public DropEntryConfig getMatchingEntry(EntityType entityType, Player killer) {
         MobDropConfig mobConfig = entityDrops.get(entityType);
         if (mobConfig == null || !mobConfig.isEnabled()) return null;
 
         for (DropEntryConfig entry : mobConfig.getEntries()) {
+            if (killer == null && entry.isRequirePlayerKill()) continue;
             if (entry.getPermission() == null) {
                 return entry; // No permission required — matches everyone
             }
@@ -216,15 +246,17 @@ public class CustomDropConfig {
 
     public static class DropEntryConfig {
         private final String permission;
+        private final boolean requirePlayerKill;
         private final boolean keepVanillaDrops;
         private final double xpMultiplier;
         private final boolean dropAll;
         private final List<DropItemConfig> items;
         private final int totalWeight;
 
-        public DropEntryConfig(String permission, boolean keepVanillaDrops, double xpMultiplier,
+        public DropEntryConfig(String permission, boolean requirePlayerKill, boolean keepVanillaDrops, double xpMultiplier,
                                boolean dropAll, List<DropItemConfig> items, int totalWeight) {
             this.permission = permission;
+            this.requirePlayerKill = requirePlayerKill;
             this.keepVanillaDrops = keepVanillaDrops;
             this.xpMultiplier = xpMultiplier;
             this.dropAll = dropAll;
@@ -233,6 +265,7 @@ public class CustomDropConfig {
         }
 
         public String getPermission() { return permission; }
+        public boolean isRequirePlayerKill() { return requirePlayerKill; }
         public boolean isKeepVanillaDrops() { return keepVanillaDrops; }
         public double getXpMultiplier() { return xpMultiplier; }
         public boolean isDropAll() { return dropAll; }
@@ -242,18 +275,21 @@ public class CustomDropConfig {
 
     public static class DropItemConfig {
         private final String item;
+        private final Material material;
         private final int min;
         private final int max;
         private final int weight;
 
-        public DropItemConfig(String item, int min, int max, int weight) {
+        public DropItemConfig(String item, Material material, int min, int max, int weight) {
             this.item = item;
+            this.material = material;
             this.min = min;
             this.max = max;
             this.weight = weight;
         }
 
         public String getItem() { return item; }
+        public Material getMaterial() { return material; }
         public int getMin() { return min; }
         public int getMax() { return max; }
         public int getWeight() { return weight; }

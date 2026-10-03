@@ -2,7 +2,7 @@ package io.shantek.Listeners;
 
 import io.shantek.CustomMobDrops;
 import io.shantek.Helpers.CustomDropConfig;
-import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -17,6 +17,10 @@ import java.util.List;
 import java.util.Random;
 
 public class EntityDeath implements Listener {
+
+    // Looked up by key: the LOOT_BONUS_MOBS field was renamed to LOOTING in 1.20.5,
+    // and the key "minecraft:looting" works across all supported versions
+    private static final Enchantment LOOTING = Enchantment.getByKey(NamespacedKey.minecraft("looting"));
 
     private final Random random = new Random();
     private final CustomMobDrops plugin;
@@ -46,8 +50,8 @@ public class EntityDeath implements Listener {
         }
 
         // Looting level — 0 if no player killer
-        int lootingLevel = killer != null
-                ? killer.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS)
+        int lootingLevel = killer != null && LOOTING != null
+                ? killer.getInventory().getItemInMainHand().getEnchantmentLevel(LOOTING)
                 : 0;
 
         // Process item drops
@@ -89,12 +93,6 @@ public class EntityDeath implements Listener {
     }
 
     private void processDrop(CustomDropConfig.DropItemConfig drop, Entity killedEntity, int lootingLevel, String killerName) {
-        Material material = Material.getMaterial(drop.getItem().toUpperCase());
-        if (material == null) {
-            plugin.getLogger().severe("Invalid material in custom-drops.yml for entity " + killedEntity.getType().name() + ": " + drop.getItem());
-            return;
-        }
-
         int min = drop.getMin();
         int max = drop.getMax();
         int range = max - min + 1;
@@ -104,7 +102,7 @@ public class EntityDeath implements Listener {
             // With looting: bias towards higher end of range
             double lootingFactor = Math.pow(random.nextDouble(), 1.0 / (1.0 + lootingLevel * 0.5));
             amount = (int) (min + lootingFactor * range);
-            int bonusAmount = lootingLevel * (range / 15);
+            int bonusAmount = (int) Math.round(lootingLevel * range / 15.0);
             amount = Math.min(amount + bonusAmount, max);
         } else {
             // No looting: uniform distribution
@@ -116,7 +114,7 @@ public class EntityDeath implements Listener {
         }
 
         if (amount > 0) {
-            ItemStack itemStack = new ItemStack(material, amount);
+            ItemStack itemStack = new ItemStack(drop.getMaterial(), amount);
             killedEntity.getWorld().dropItemNaturally(killedEntity.getLocation(), itemStack);
         }
 

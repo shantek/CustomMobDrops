@@ -17,6 +17,7 @@ public class PluginConfig {
 
     public void loadConfig() {
         plugin.saveDefaultConfig();
+        plugin.reloadConfig();
         FileConfiguration config = plugin.getConfig();
         customMobDropsEnabled = config.getBoolean("custom-drops-enabled", true);
         lootingMultiplierEnabled = config.getBoolean("looting-multiplier-enabled", true);

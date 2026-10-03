@@ -36,6 +36,7 @@ public class Command implements CommandExecutor {
                     functions.sendMessage(sender, "You do not have permission to reload the plugin.", true);
                     return true;
                 }
+                customDrops.pluginConfig.loadConfig();
                 customDrops.customDropConfig.loadConfig(sender);
                 int count = customDrops.customDropConfig.getEntityDrops().size();
                 functions.sendMessage(sender, "Reloaded config: " + count + " mobs configured.", false);
